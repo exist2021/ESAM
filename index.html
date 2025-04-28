@@ -302,14 +302,14 @@
     <script>
         // Initialize EmailJS with your Public Key
         (function() {
-            emailjs.init("user_TK5RyNUa7KbNMEM5"); // Your EmailJS Public Key
+            emailjs.init("-TK5RyNUa7KbNMEM5"); // Your EmailJS Public Key
         })();
 
         // Quiz data (questions, options, correct answer index)
         const quizData = [
              {
                 question: "What is the primary goal of the 'Pyramids to Circles' framework?",
-                options: [
+               options: [
                     "To centralize global power structures",
                     "To decentralize and localize the 'Infoverse'",
                     "To build physical pyramids around the world",
@@ -764,20 +764,16 @@
         function sendOptInEmail() {
             const isOptedIn = optInCheckbox.checked;
 
+            // Send a simple test email
             const templateParams = {
-                participant_email: participantEmail, // Use stored email
-                participant_phone: participantPhone,  // Use stored phone
-                participant_score: score, // Include the final score
-                total_questions: quizData.length, // Include total questions
-                earned_badge: earnedBadgeText, // Include the earned badge text
-                opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status
-            };
-
-            // Send the email via EmailJS with opt-in status, score, and badge
-            // Service ID: service_h6i9o2a
+              to_email: participantEmail,
+              subject: "Test Email",
+             message: "This is a test email."
+            }
+            // Service ID: service_wueoxhm
             // Template ID: template_nodw1zo
             // Public Key: -TK5RyNUa7KbNMEM5
-            emailjs.send("service_h6i9o2a", "template_nodw1zo", templateParams)
+            emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
                    optInFeedback.textContent = 'Your preference and results have been submitted.';
                    optInFeedback.style.color = '#065f46'; // Green color for success
