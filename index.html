@@ -761,6 +761,13 @@
         function sendOptInEmail() {
             // Add the submitting message
             optInFeedback.textContent = 'Submitting...';
+            // Log the value of isOptedIn
+            alert('isOptedIn: ' + isOptedIn);
+            // Log the value of optInFeedback.textContent
+            alert('optInFeedback: ' + optInFeedback.textContent);
+
+
+
            // Get opt in information
             const isOptedIn = optInCheckbox.checked;
              // Log the value of participantEmail
@@ -789,6 +796,14 @@
             console.log(templateParams);
             // Log message before sending
             console.log('Sending email...');
+            // Log the value of templateParams.participant_email
+            alert('participantEmail: ' + templateParams.participant_email);
+            // Log the value of templateParams.participant_phone
+            alert('participantPhone: ' + templateParams.participant_phone);
+            // Log the value of templateParams.participant_score
+            alert('score: ' + templateParams.participant_score);
+             // Log the value of templateParams.total_questions
+            alert('total_questions: ' + templateParams.total_questions);
 
             emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
