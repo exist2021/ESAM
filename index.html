@@ -680,8 +680,10 @@
                 labels[correctIndex].classList.add('correct-answer');
             }
 
-            currentQuestionIndex++;
-            loadQuestion();
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 2000); // 2000 milliseconds = 2 seconds
         }
 
         // Function to trigger confetti
