@@ -777,6 +777,8 @@
                 opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status
             };
 
+            // Log the parameters that are being sent to EmailJS
+            console.log(templateParams);
             // Log message before sending
             console.log('Sending email...');
 
