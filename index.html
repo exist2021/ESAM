@@ -774,17 +774,8 @@
 
         // Function to send the opt-in email
         function sendOptInEmail() {
-             // Alert to check if sendOptInEmail is called
-            // Log the value of score
-            console.log('score:', score);
-            // Log the value of quizData.length
-            console.log('quizData.length:', quizData.length);
-            // Log the value of earnedBadgeText
-            console.log('earnedBadgeText:', earnedBadgeText);
-
-            // Add the submitting message
+       
             optInFeedback.textContent = 'Submitting...';
-
             const isOptedIn = optInCheckbox.checked;
 
             const templateParams = {
@@ -796,26 +787,14 @@
                 opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status            
             };
 
-            // Log the parameters that are being sent to EmailJS
-            console.log(templateParams);
-            // Log message before sending
-            console.log('Sending email...');
                 .then(function(response) {
-                    // Log email sent message
-                     // Check that email sent successfully
-
                     optInFeedback.textContent = 'Your preference and results have been submitted.';
-
-                   submitOptInButton.disabled = true; // Disable button after sending
-
+                    submitOptInButton.disabled = true; 
 
                 }, function(error) {
-                    // Log email failed message
-                    console.log('Email failed!');
                     optInFeedback.textContent = 'Failed submitting!';
-
                    optInFeedback.style.color = '#991b1b';
-                   console.error('Results and Opt-in email sending failed:', error);
+                   
                 });
         }
 
