@@ -766,6 +766,16 @@
         // Function to send the opt-in email
         function sendOptInEmail() {
             const isOptedIn = optInCheckbox.checked;
+             // Log the value of participantEmail
+            console.log('participantEmail:', participantEmail);
+             // Log the value of participantPhone
+            console.log('participantPhone:', participantPhone);
+            // Log the value of score
+            console.log('score:', score);
+            // Log the value of quizData.length
+            console.log('quizData.length:', quizData.length);
+            // Log the value of earnedBadgeText
+            console.log('earnedBadgeText:', earnedBadgeText);
 
             const templateParams = {
                 participant_email: participantEmail, // Use stored email
