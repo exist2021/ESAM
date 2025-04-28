@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ESAM Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the quiz */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .quiz-container {
+            background-color: #ffffff; /* White background */
+            padding: 30px;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            max-width: 700px; /* Max width for better readability */
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #1f2937; /* Dark gray text */
+            margin-bottom: 20px;
+            font-size: 2em; /* Larger heading */
+        }
+        .info-area, .quiz-area, .score-area {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+         .info-area label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #374151;
+         }
+         .info-area input[type="email"],
+         .info-area input[type="tel"] {
+             width: 100%;
+             padding: 10px;
+             margin-bottom: 15px;
+             border: 1px solid #d1d5db;
+             border-radius: 8px;
+             box-sizing: border-box; /* Include padding in width */
+         }
+         .start-button {
+             background-color: #1d4ed8; /* Blue */
+             color: white;
+             padding: 12px 25px;
+             border: none;
+             border-radius: 8px;
+             cursor: pointer;
+             font-size: 1.1em;
+             transition: background-color 0.3s ease;
+         }
+         .start-button:hover {
+             background-color: #1e3a8a; /* Darker blue */
+         }
+
+        .question-area {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #374151;
+        }
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #374151; /* Medium dark gray */
+        }
+        .options label {
+            display: block;
+            background-color: #e5e7eb; /* Light gray option background */
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid #d1d5db; /* Light border */
+        }
+        .options label:hover {
+            background-color: #d1d5db; /* Darker gray on hover */
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            min-height: 20px; /* Reserve space */
+        }
+        .feedback.correct {
+            background-color: #d1fae5; /* Light green */
+            color: #065f46; /* Dark green */
+        }
+        .feedback.incorrect {
+            background-color: #fee2e2; /* Light red */
+            color: #991b1b; /* Dark red */
+        }
+        .score-area {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #1f2937;
+        }
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px; /* Space between badges if multiple */
+        }
+        .badge.gold { background-color: #d97706; } /* Amber */
+        .badge.silver { background-color: #6b7280; } /* Gray */
+        .badge.bronze { background-color: #b45309; } /* Orange */
+        .badge.copper { background-color: #b91c1c; } /* Red */
+
+        /* Hide radio buttons visually but keep them accessible */
+        .options input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Style for selected option */
+        .options input[type="radio"]:checked + span {
+             font-weight: bold; /* Make text bold when selected */
+        }
+         .options label.selected {
+            border-color: #1d4ed8; /* Blue border for selected */
+         }
+
+         /* Style for correct/incorrect answers after submission */
+        .options label.correct-answer {
+            background-color: #a7f3d0; /* Lighter green */
+            border-color: #065f46;
+        }
+        .options label.incorrect-answer {
+            background-color: #fecaca; /* Lighter red */
+            border-color: #991b1b;
+        }
+         .options label.incorrect-answer.selected {
+             background-color: #fca5a5; /* Slightly darker red if selected and wrong */
+         }
+
+         /* Disable pointer events on options after answer */
+         .options.disabled label {
+             pointer-events: none;
+             opacity: 0.7;
+         }
+         .hidden {
+             display: none;
+         }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1 class="text-3xl font-bold mb-6">$ESAM Quiz</h1>
+
+        <div id="info-area" class="info-area">
+            <p class="mb-4 text-center">Please provide your details to start the quiz.</p>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone">
+
+            <button id="start-quiz-button" class="start-button w-full">Start Quiz</button>
+        </div>
+
+        <div id="quiz-area" class="quiz-area hidden">
+            <div class="question-header">
+                <div id="question-progress" class="text-lg font-semibold">Question 1 / 15</div>
+                <div id="time-left" class="text-lg font-semibold">Time Left: --:--</div>
+            </div>
+            <div class="question-area">
+                <div id="question-text" class="question-text">Loading question...</div>
+                <div id="options" class="options">
+                    </div>
+            </div>
+
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div id="score-area" class="score-area hidden">
+            <p class="text-2xl font-bold mb-4">Quiz Completed!</p>
+            <p>Your final score: <span id="final-score">0</span> / <span id="total-questions">0</span></p>
+            <p>Percentage: <span id="percentage">0</span>%</p>
+            <div id="badge-area">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+
+    <script>
+        // Initialize EmailJS with your Public Key
+        (function() {
+            emailjs.init("-TK5RyNUa7KbNMEM5"); // Replace with your actual Public Key
+        })();
+
+        // Quiz data (questions, options, correct answer index)
+        const quizData = [
+             {
+                question: "What is the primary goal of the 'Pyramids to Circles' framework?",
+                options: [
+                    "To centralize global power structures",
+                    "To decentralize and localize the 'Infoverse'",
+                    "To build physical pyramids around the world",
+                    "To increase corporate monopolies"
+                ],
+                correct: 1 // Index of the correct answer (0-based)
+            },
+            {
+                question: "According to the text, what is identified as the root cause of the climate change crisis?",
+                options: [
+                    "Solar flares",
+                    "Volcanic activity",
+                    "Indiscriminate human activity",
+                    "Natural climate cycles"
+                ],
+                correct: 2
+            },
+            {
+                question: "eSamudaay is described as a 'Web2.5 nested network of decentralized communities' in which country?",
+                options: [
+                    "USA",
+                    "UAE",
+                    "India",
+                    "China"
+                ],
+                correct: 2
+            },
+            {
+                question: "The NEST software has three types of distributions. What is the L1 distribution connected to?",
+                options: [
+                    "Geography",
+                    "Industry",
+                    "Affinity",
+                    "Government"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the role of the Nirmund server?",
+                options: [
+                    "To host centralized databases",
+                    "To contain 'seeds' for instantiating networks",
+                    "To process cryptocurrency transactions",
+                    "To manage user accounts"
+                ],
+                correct: 1
+            },
+            {
+                question: "The Web2.5 approach is significant in the context of India because India is described as being:",
+                options: [
+                    "Highly technologically advanced",
+                    "Crypto-friendly",
+                    "Crypto-averse",
+                    "A major cryptocurrency mining hub"
+                ],
+                correct: 2
+            },
+            {
+                question: "Where is the $ESAM token initially planned to launch?",
+                options: [
+                    "Mumbai, India",
+                    "London, UK",
+                    "Dubai, UAE",
+                    "Singapore"
+                ],
+                correct: 2
+            },
+            {
+                question: "The concept of 'Their Circles' envisions what type of digital communities?",
+                options: [
+                    "Centrally controlled",
+                    "Government regulated",
+                    "Self-reliant, collectively managed",
+                    "Managed by large corporations"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of the following is NOT listed as a key functionality of 'Their Circles'?",
+                options: [
+                    "Identity and Trust",
+                    "Centralized Banking",
+                    "Market Formation",
+                    "Collective Governance"
+                ],
+                correct: 1
+            },
+            {
+                question: "The 'Their Circles' concept encompasses three spheres. Which of the following is one of them?",
+                options: [
+                    "Politics",
+                    "Communication",
+                    "Education",
+                    "Healthcare"
+                ],
+                correct: 1
+            },
+             {
+                question: "Nirmund's mission is to 'Democratize Digital', aiming to enable individuals to enrich themselves through what?",
+                options: [
+                    "Physical labor",
+                    "Government grants",
+                    "The information rich world",
+                    "Stock market investments"
+                ],
+                correct: 2
+            },
+            {
+                question: "According to the text, what is considered the new form of wealth?",
+                options: [
+                    "Gold",
+                    "Real Estate",
+                    "Knowledge",
+                    "Cryptocurrency"
+                ],
+                correct: 2
+            },
+             {
+                question: "The 'Future of money' is envisioned as 'Designer' money, meaning:",
+                options: [
+                    "Money designed by fashion houses",
+                    "Money only accessible to designers",
+                    "Everyone can design their own money by participating in communities",
+                    "Money with complex cryptographic designs"
+                ],
+                correct: 2
+            },
+            {
+                question: "What happens to $ESAM holders when new tokens are launched through the eSamudaay token?",
+                options: [
+                    "They have to buy them separately",
+                    "They receive allocations directly into their wallets at no extra cost",
+                    "They lose their $ESAM tokens",
+                    "They get a discount on future token purchases"
+                ],
+                correct: 1
+            },
+             {
+                question: "The transition from 'Pyramids to Circles' signifies a shift from what type of structures?",
+                options: [
+                    "Flat to spherical",
+                    "Centralized, hierarchical to decentralized, community-based",
+                    "Small to large",
+                    "Ancient to modern"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let consecutiveCorrect = 0;
+        let quizCompleted = false;
+        let timerInterval;
+        let timeLeft = 15 * 60; // 15 minutes in seconds (adjust as needed)
+
+        const infoAreaElement = document.getElementById('info-area');
+        const quizAreaElement = document.getElementById('quiz-area');
+        const scoreAreaElement = document.getElementById('score-area');
+        const startQuizButton = document.getElementById('start-quiz-button');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+
+        const questionProgressElement = document.getElementById('question-progress');
+        const timeLeftElement = document.getElementById('time-left');
+        const questionTextElement = document.getElementById('question-text');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const finalScoreElement = document.getElementById('final-score');
+        const totalQuestionsElement = document.getElementById('total-questions');
+        const percentageElement = document.getElementById('percentage');
+        const badgeAreaElement = document.getElementById('badge-area');
+
+        // Event listener for the Start Quiz button
+        startQuizButton.addEventListener('click', startQuiz);
+
+        // Function to start the quiz
+        function startQuiz() {
+            const email = emailInput.value.trim();
+            const phone = phoneInput.value.trim();
+
+            if (!email) {
+                alert("Please enter your email address."); // Using alert as a simple validation feedback
+                return;
+            }
+
+            // Prepare template parameters for EmailJS
+            const templateParams = {
+                participant_email: email, // Match variable name in your EmailJS template
+                participant_phone: phone  // Match variable name in your EmailJS template
+                // Add other parameters if your template requires them, e.g., from_name
+            };
+
+            // Send the email using EmailJS
+            emailjs.send("service_h6i9o2a", "YOUR_TEMPLATE_ID", templateParams) // Replace "YOUR_TEMPLATE_ID" with your actual template ID
+                .then(function(response) {
+                   console.log('Email successfully sent!', response.status, response.text);
+                   // Optionally, show a success message to the user
+                }, function(error) {
+                   console.error('Email sending failed:', error);
+                   // Optionally, show an error message to the user
+                   // You might want to proceed with the quiz even if email sending fails
+                });
+
+            // Hide info area and show quiz area
+            infoAreaElement.classList.add('hidden');
+            quizAreaElement.classList.remove('hidden');
+
+            // Start the timer
+            startTimer();
+
+            // Load the first question
+            loadQuestion();
+        }
+
+        // Function to start the timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timeLeftElement.textContent = `Time Left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showResults(); // End quiz if time runs out
+                }
+                timeLeft--;
+            }, 1000); // Update every 1 second
+        }
+
+        // Function to load a question
+        function loadQuestion() {
+            if (currentQuestionIndex < quizData.length) {
+                const currentQuestion = quizData[currentQuestionIndex];
+                questionProgressElement.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
+                questionTextElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = ''; // Clear previous options
+                feedbackElement.textContent = ''; // Clear feedback
+                feedbackElement.className = 'feedback'; // Reset feedback class
+                optionsElement.classList.remove('disabled'); // Enable options
+
+                currentQuestion.options.forEach((option, index) => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `<input type="radio" name="answer" value="${index}"> <span>${option}</span>`;
+                    label.addEventListener('click', () => selectOption(index)); // Use click on label
+                    optionsElement.appendChild(label);
+                });
+            } else {
+                showResults();
+            }
+        }
+
+        // Function to handle option selection
+        function selectOption(selectedIndex) {
+             if (quizCompleted || optionsElement.classList.contains('disabled')) {
+                 return; // Prevent multiple clicks or clicks after completion
+             }
+
+            const currentQuestion = quizData[currentQuestionIndex];
+            const correctIndex = currentQuestion.correct;
+            const labels = optionsElement.querySelectorAll('label');
+
+            // Disable options after selection
+            optionsElement.classList.add('disabled');
+
+            // Add 'selected' class to the chosen label
+            labels[selectedIndex].classList.add('selected');
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                consecutiveCorrect++;
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.className = 'feedback correct';
+                labels[selectedIndex].classList.add('correct-answer'); // Highlight correct selected answer
+                if (consecutiveCorrect >= 3) {
+                    triggerConfetti();
+                }
+            } else {
+                consecutiveCorrect = 0; // Reset consecutive count
+                feedbackElement.textContent = 'Incorrect.';
+                feedbackElement.className = 'feedback incorrect';
+                 labels[selectedIndex].classList.add('incorrect-answer'); // Highlight incorrect selected answer
+                // Also highlight the correct answer
+                labels[correctIndex].classList.add('correct-answer');
+            }
+
+            // Auto-forward after 3 seconds
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 3000); // 3000 milliseconds = 3 seconds
+        }
+
+        // Function to trigger confetti
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Function to show final results and badges
+        function showResults() {
+            quizCompleted = true;
+            clearInterval(timerInterval); // Stop the timer
+            quizAreaElement.classList.add('hidden');
+            scoreAreaElement.classList.remove('hidden');
+
+            totalQuestionsElement.textContent = quizData.length;
+            finalScoreElement.textContent = score;
+            const percentage = (score / quizData.length) * 100;
+            percentageElement.textContent = percentage.toFixed(1); // Show one decimal place
+
+            badgeAreaElement.innerHTML = ''; // Clear previous badges
+
+            if (percentage >= 90) {
+                displayBadge('Gold Badge (90% +)', 'gold');
+            }
+            if (percentage >= 80) {
+                displayBadge('Silver Badge (80% +)', 'silver');
+            }
+            if (percentage >= 70) {
+                displayBadge('Bronze Badge (70% +)', 'bronze');
+            }
+             if (percentage >= 50) {
+                 displayBadge('Copper Badge (50% +)', 'copper');
+            }
+            if (percentage < 50) {
+                 badgeAreaElement.textContent = "Keep studying!";
+            }
+        }
+
+        // Function to display a badge
+        function displayBadge(text, colorClass) {
+            const badge = document.createElement('span');
+            badge.textContent = text;
+            badge.className = `badge ${colorClass}`;
+            badgeAreaElement.appendChild(badge);
+        }
+
+        // No initial load of question here, it happens after clicking Start Quiz
+    </script>
+</body>
+</html>
