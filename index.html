@@ -707,21 +707,39 @@
         // Function to show final results and the earned badge
         function showResults() {
             // Alert to check if showResults is called
-             // Alert to check if showResults is called
             alert('showResults called');
 
 
             quizCompleted = true;
+             // Check the timer is cleared
              clearInterval(timerInterval); // Stop the timer
+             alert('clearInterval');
             quizAreaElement.classList.add('hidden');
+             // Check that quiz area is hidden
+             alert('quizAreaElement hidden');
             scoreAreaElement.classList.remove('hidden');
-            //optInArea.classList.remove('hidden'); // Show opt-in area
+            // Check the score area is shown
+            alert('scoreAreaElement shown');
+             optInArea.classList.remove('hidden'); // Show opt-in area
+             // Check the opt-in area is shown
+             alert('optInArea shown');
             
-             // Call the function to send the email
-            sendOptInEmail();
+            
+
+            // Add the listener for the submit button
+             const submitOptInButton = document.getElementById('submit-opt-in');
+             submitOptInButton.addEventListener('click', sendOptInEmail);
+             //Check if the event listener was added
+             alert('event listener added');
 
             totalQuestionsElement.textContent = quizData.length;
+             // Check the total questions
+             alert('totalQuestionsElement');
+
             finalScoreElement.textContent = score;
+             // Check the final score
+            alert('finalScoreElement');
+
             const percentage = (score / quizData.length) * 100;
 
             badgeAreaElement.innerHTML = ''; // Clear previous badge
@@ -746,9 +764,10 @@
                  noBadgeText.className = 'no-badge';
                  badgeAreaElement.appendChild(noBadgeText);
             }
-              const submitOptInButton = document.getElementById('submit-opt-in');
-             submitOptInButton.addEventListener('click', sendOptInEmail);
+            // Check the badge area
+            alert('badgeAreaElement');
 
+             
 
         }
 
@@ -778,8 +797,9 @@
         // Function to send the opt-in email
         function sendOptInEmail() {
              // Alert to check if sendOptInEmail is called
+             alert('sendOptInEmail called');
+            
             alert('sendOptInEmail called');
-
             // Add the submitting message
             optInFeedback.textContent = 'Submitting...';
             // Log the value of isOptedIn
@@ -844,7 +864,7 @@
                    console.error('Results and Opt-in email sending failed:', error);
                 });
         }
-        
+
     </script>
 </body>
 </html>
