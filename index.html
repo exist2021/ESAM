@@ -705,21 +705,10 @@
         // Function to show final results and the earned badge
         function showResults() {
             quizCompleted = true;
-             // Check the timer is cleared
              clearInterval(timerInterval); // Stop the timer
             quizAreaElement.classList.add('hidden');
             scoreAreaElement.classList.remove('hidden');
              optInArea.classList.remove('hidden'); // Show opt-in area
-            infoAreaElement.classList.add('hidden');
-
-            
-
-             submitOptInButton.addEventListener('click', sendOptInEmail);
-
-            totalQuestionsElement.textContent = quizData.length;
-             // Check the total questions
-            finalScoreElement.textContent = score;
-             // Check the final score
 
             const percentage = (score / quizData.length) * 100;
 
@@ -745,7 +734,12 @@
                  noBadgeText.className = 'no-badge';
                  badgeAreaElement.appendChild(noBadgeText);
             }
-             
+            submitOptInButton.addEventListener('click', sendOptInEmail);
+
+            totalQuestionsElement.textContent = quizData.length;
+            finalScoreElement.textContent = score;
+
+            infoAreaElement.classList.add('hidden');
 
         }
 
