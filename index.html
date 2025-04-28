@@ -697,6 +697,9 @@
 
         // Function to show final results and the earned badge
         function showResults() {
+            // Alert to check if showResults is called
+            alert('showResults called');
+
             quizCompleted = true;
             clearInterval(timerInterval); // Stop the timer
             quizAreaElement.classList.add('hidden');
