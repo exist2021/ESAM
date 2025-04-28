@@ -706,20 +706,10 @@
 
         // Function to show final results and the earned badge
         function showResults() {
-            // Alert to check if showResults is called
-            alert('showResults called');
-
-
             quizCompleted = true;
-             // Check the timer is cleared
-             clearInterval(timerInterval); // Stop the timer
-             alert('clearInterval');
+            clearInterval(timerInterval); // Stop the timer
             quizAreaElement.classList.add('hidden');
-             // Check that quiz area is hidden
-             alert('quizAreaElement hidden');
             scoreAreaElement.classList.remove('hidden');
-            // Check the score area is shown
-            alert('scoreAreaElement shown');
              optInArea.classList.remove('hidden'); // Show opt-in area
              // Check the opt-in area is shown
              alert('optInArea shown');
@@ -728,18 +718,9 @@
 
             // Add the listener for the submit button
              const submitOptInButton = document.getElementById('submit-opt-in');
-             submitOptInButton.addEventListener('click', sendOptInEmail);
-             //Check if the event listener was added
-             alert('event listener added');
-
+            submitOptInButton.addEventListener('click', sendOptInEmail);
             totalQuestionsElement.textContent = quizData.length;
-             // Check the total questions
-             alert('totalQuestionsElement');
-
             finalScoreElement.textContent = score;
-             // Check the final score
-            alert('finalScoreElement');
-
             const percentage = (score / quizData.length) * 100;
 
             badgeAreaElement.innerHTML = ''; // Clear previous badge
@@ -764,9 +745,6 @@
                  noBadgeText.className = 'no-badge';
                  badgeAreaElement.appendChild(noBadgeText);
             }
-            // Check the badge area
-            alert('badgeAreaElement');
-
              
 
         }
@@ -796,26 +774,12 @@
 
         // Function to send the opt-in email
         function sendOptInEmail() {
-             // Alert to check if sendOptInEmail is called
-             alert('sendOptInEmail called');
-            
-            alert('sendOptInEmail called');
+           
             // Add the submitting message
             optInFeedback.textContent = 'Submitting...';
             // Log the value of isOptedIn
-            alert('isOptedIn: ' + isOptedIn);
-            // Log the value of optInFeedback.textContent
-            alert('optInFeedback: ' + optInFeedback.textContent);
-
-
-            // Check if templateParams is defined
-            alert('templateParams defined');
-
            // Get opt in information
             const isOptedIn = optInCheckbox.checked;
-             // Log the value of participantEmail
-            console.log('participantEmail:', participantEmail);
-
 
              // Log the value of participantPhone
             console.log('participantPhone:', participantPhone);
@@ -837,18 +801,8 @@
 
             // Log the parameters that are being sent to EmailJS
             console.log(templateParams);
-            // Log message before sending
-            console.log('Sending email...');
-            // Log the value of templateParams.participant_email
-            alert('participantEmail: ' + templateParams.participant_email);
-            // Log the value of templateParams.participant_phone
-            alert('participantPhone: ' + templateParams.participant_phone);
-            // Log the value of templateParams.participant_score
-            alert('score: ' + templateParams.participant_score);
-             // Log the value of templateParams.total_questions
-            alert('total_questions: ' + templateParams.total_questions);
 
-            emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
+           emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
                      //Check that the emailjs send function was called
                     alert('emailjs send function');
@@ -867,8 +821,6 @@
                     // Log email failed message
                     console.log('Email failed!');
                     optInFeedback.textContent = 'Failed submitting!';
-                    //Check if the email failed
-                    alert('Email failed!');
                    optInFeedback.style.color = '#991b1b'; // Red color for error
                    console.error('Results and Opt-in email sending failed:', error);
                 });
