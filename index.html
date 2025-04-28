@@ -248,12 +248,18 @@
             <p class="mb-4 text-center">Please provide your details to start the quiz.</p>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone">
-
+            <div id="opt-in-area" class="opt-in-area">
+                 <p>Would you like to receive more information about #ESAM?</p>
+                 <div>
+                     <input type="checkbox" id="opt-in-checkbox">
+                     <label for="opt-in-checkbox">Yes, I would like to receive more information.</label>
+                 </div>
+                 <div id="opt-in-feedback" class="opt-in-feedback"></div>
+            </div>
             <button id="start-quiz-button" class="start-button w-full">Start Quiz</button>
-            <div id="time-up-message" class="time-up-message hidden">Time's up! Please restart the quiz.</div>
+             <div id="time-up-message" class="time-up-message hidden">Time's up! Please restart the quiz.</div>
         </div>
 
         <div id="quiz-area" class="quiz-area hidden">
@@ -282,16 +288,6 @@
                 <div id="badge-area">
                     </div>
                 <button id="review-button" class="start-button mt-6">Review Answers</button>
-            </div>
-
-            <div id="opt-in-area" class="opt-in-area">
-                 <p>Would you like to receive more information about #ESAM?</p>
-                 <div>
-                     <input type="checkbox" id="opt-in-checkbox">
-                     <label for="opt-in-checkbox">Yes, I would like to receive more information.</label>
-                 </div>
-                 <button id="submit-opt-in" class="submit-opt-in-button">Submit Preference</button>
-                 <div id="opt-in-feedback" class="opt-in-feedback"></div>
             </div>
         </div>
     </div>
@@ -672,8 +668,8 @@
                 feedbackElement.textContent = 'Correct!';
                 feedbackElement.className = 'feedback correct';
                 labels[selectedIndex].classList.add('correct-answer'); // Highlight correct selected answer
-                if (consecutiveCorrect >= 3) {
-                    triggerConfetti();
+                if (consecutiveCorrect >= 5) {
+                   triggerConfetti();
                 }
             } else {
                 consecutiveCorrect = 0; // Reset consecutive count
@@ -703,11 +699,10 @@
             clearInterval(timerInterval); // Stop the timer
             quizAreaElement.classList.add('hidden');
             scoreAreaElement.classList.remove('hidden');
-            optInArea.classList.remove('hidden'); // Show opt-in area
-
-            // Add event listener here, when the button is available
-            const submitOptInButton = document.getElementById('submit-opt-in');
-            submitOptInButton.addEventListener('click', sendOptInEmail);
+            //optInArea.classList.remove('hidden'); // Show opt-in area
+            
+             // Call the function to send the email
+            sendOptInEmail();
 
             totalQuestionsElement.textContent = quizData.length;
             finalScoreElement.textContent = score;
@@ -762,9 +757,12 @@
 
         // Function to send the opt-in email
         function sendOptInEmail() {
+           // Get opt in information
             const isOptedIn = optInCheckbox.checked;
              // Log the value of participantEmail
             console.log('participantEmail:', participantEmail);
+
+
              // Log the value of participantPhone
             console.log('participantPhone:', participantPhone);
             // Log the value of score
@@ -796,7 +794,7 @@
                     console.log('Email sent!');
 
                     optInFeedback.textContent = 'Your preference and results have been submitted.';
-                   optInFeedback.style.color = '#065f46'; // Green color for success
+                    optInFeedback.style.color = '#065f46'; // Green color for success
                    submitOptInButton.disabled = true; // Disable button after sending
 
 
