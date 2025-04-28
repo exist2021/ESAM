@@ -808,6 +808,8 @@
             alert('optInFeedback: ' + optInFeedback.textContent);
 
 
+            // Check if templateParams is defined
+            alert('templateParams defined');
 
            // Get opt in information
             const isOptedIn = optInCheckbox.checked;
@@ -848,11 +850,16 @@
 
             emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
+                     //Check that the emailjs send function was called
+                    alert('emailjs send function');
                     // Log email sent message
                     console.log('Email sent!');
+                     // Check that email sent successfully
+                    alert('Email sent!');
 
                     optInFeedback.textContent = 'Your preference and results have been submitted.';
                     optInFeedback.style.color = '#065f46'; // Green color for success
+
                    submitOptInButton.disabled = true; // Disable button after sending
 
 
@@ -860,6 +867,8 @@
                     // Log email failed message
                     console.log('Email failed!');
                     optInFeedback.textContent = 'Failed submitting!';
+                    //Check if the email failed
+                    alert('Email failed!');
                    optInFeedback.style.color = '#991b1b'; // Red color for error
                    console.error('Results and Opt-in email sending failed:', error);
                 });
