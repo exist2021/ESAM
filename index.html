@@ -233,6 +233,11 @@
              font-size: 0.9em;
              color: #374151;
          }
+         .time-up-message {
+             color: #b91c1c; /* Red */
+             font-weight: bold;
+             margin-top: 20px;
+         }
     </style>
 </head>
 <body>
@@ -248,6 +253,7 @@
             <input type="tel" id="phone" name="phone">
 
             <button id="start-quiz-button" class="start-button w-full">Start Quiz</button>
+            <div id="time-up-message" class="time-up-message hidden">Time's up! Please restart the quiz.</div>
         </div>
 
         <div id="quiz-area" class="quiz-area hidden">
@@ -458,7 +464,8 @@
         let consecutiveCorrect = 0;
         let quizCompleted = false;
         let timerInterval;
-        let timeLeft = 15 * 60; // 15 minutes in seconds (adjust as needed)
+        let initialTime = 3 * 60; // 3 minutes in seconds
+        let timeLeft = initialTime;
         let userAnswers = []; // Array to store user's selected answer index for each question
         let isReviewMode = false; // Flag to indicate if the quiz is in review mode
 
@@ -473,6 +480,7 @@
         const startQuizButton = document.getElementById('start-quiz-button');
         const emailInput = document.getElementById('email');
         const phoneInput = document.getElementById('phone');
+        const timeUpMessage = document.getElementById('time-up-message'); // Added element for time up message
 
         const questionProgressElement = document.getElementById('question-progress');
         const timeLeftElement = document.getElementById('time-left');
@@ -515,16 +523,21 @@
             quizAreaElement.classList.remove('hidden');
             reviewNav.classList.add('hidden'); // Hide review nav during quiz
             optInArea.classList.add('hidden'); // Hide opt-in area during quiz
+            timeUpMessage.classList.add('hidden'); // Hide time up message
+
+            // Reset quiz state
+            currentQuestionIndex = 0;
+            score = 0;
+            consecutiveCorrect = 0;
+            quizCompleted = false;
+            isReviewMode = false;
+            userAnswers = new Array(quizData.length).fill(null);
+            timeLeft = initialTime; // Reset timer
 
             // Start the timer
             startTimer();
 
             // Load the first question
-            currentQuestionIndex = 0; // Start from the first question
-            isReviewMode = false; // Ensure not in review mode
-            userAnswers = new Array(quizData.length).fill(null); // Initialize user answers array
-            score = 0; // Reset score
-            consecutiveCorrect = 0; // Reset consecutive correct
             loadQuestion();
         }
 
@@ -537,15 +550,41 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    showResults(); // End quiz if time runs out
+                    handleTimeUp(); // Call new function when time is up
                 }
                 timeLeft--;
             }, 1000); // Update every 1 second
         }
 
+        // Function to handle time running out
+        function handleTimeUp() {
+            quizCompleted = true; // Mark quiz as completed (by time running out)
+            quizAreaElement.classList.add('hidden'); // Hide quiz area
+            infoAreaElement.classList.remove('hidden'); // Show info area to restart
+            timeUpMessage.classList.remove('hidden'); // Show time up message
+
+            // Clear input fields for a fresh start
+            emailInput.value = '';
+            phoneInput.value = '';
+
+            // Reset quiz state (already done in startQuiz, but good to be explicit)
+            currentQuestionIndex = 0;
+            score = 0;
+            consecutiveCorrect = 0;
+            userAnswers = [];
+            isReviewMode = false;
+            timeLeft = initialTime; // Reset timer for the next attempt
+        }
+
+
         // Function to load a question (handles both quiz and review mode)
         function loadQuestion() {
             if (currentQuestionIndex < quizData.length) {
+                 // Prevent loading questions if quiz is completed (e.g., by time up)
+                if (quizCompleted && !isReviewMode) {
+                    return;
+                }
+
                 const currentQuestion = quizData[currentQuestionIndex];
                 questionProgressElement.textContent = `Question ${currentQuestionIndex + 1} / ${quizData.length}`;
                 questionTextElement.textContent = currentQuestion.question;
@@ -599,7 +638,7 @@
                     });
                 }
 
-            } else if (!isReviewMode) { // Quiz finished, show results
+            } else if (!isReviewMode) { // Quiz finished normally, show results
                 showResults();
             } else { // Review finished (shouldn't happen with button disabling)
                  // Could potentially add a "Back to Score" button here if needed
@@ -735,7 +774,10 @@
             };
 
             // Send the email via EmailJS with opt-in status, score, and badge
-            emailjs.send("service_h6i9o2a", "template_nodw1zo", templateParams) // Using your Service ID and Template ID
+            // Service ID: service_h6i9o2a
+            // Template ID: template_nodw1zo
+            // Public Key: -TK5RyNUa7KbNMEM5
+            emailjs.send("service_h6i9o2a", "template_nodw1zo", templateParams)
                 .then(function(response) {
                    optInFeedback.textContent = 'Your preference and results have been submitted.';
                    optInFeedback.style.color = '#065f46'; // Green color for success
@@ -748,7 +790,9 @@
                 });
         }
 
-        // No initial load of question here, it happens after clicking Start Quiz
+        // Initial display of timer (optional, shows --:-- before start)
+        // You could also call startTimer() here if you want the timer to start immediately on page load
+        // but the user needs to enter details first, so it's better to start on button click.
     </script>
 </body>
 </html>
