@@ -233,6 +233,14 @@
              font-size: 0.9em;
              color: #374151;
          }
+         .submit-opt-in-button {
+             background-color: #059669; /* Green */
+             color: white;
+             padding: 10px 20px;
+             border: none;
+             border-radius: 8px;
+             color: #374151;
+         }
          .time-up-message {
              color: #b91c1c; /* Red */
              font-weight: bold;
@@ -250,14 +258,6 @@
             <input type="email" id="email" name="email" required>
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone">
-            <div id="opt-in-area" class="opt-in-area">
-                 <p>Would you like to receive more information about #ESAM?</p>
-                 <div>
-                     <input type="checkbox" id="opt-in-checkbox">
-                     <label for="opt-in-checkbox">Yes, I would like to receive more information.</label>
-                 </div>
-                 <div id="opt-in-feedback" class="opt-in-feedback"></div>
-            </div>
             <button id="start-quiz-button" class="start-button w-full">Start Quiz</button>
              <div id="time-up-message" class="time-up-message hidden">Time's up! Please restart the quiz.</div>
         </div>
@@ -289,6 +289,16 @@
                     </div>
                 <button id="review-button" class="start-button mt-6">Review Answers</button>
             </div>
+        </div>
+        <div id="opt-in-area" class="opt-in-area hidden">
+            <p>Would you like to receive more information about #ESAM?</p>
+            <div>
+                <input type="checkbox" id="opt-in-checkbox">
+                <label for="opt-in-checkbox">Yes, I would like to receive more information.</label>
+            </div>
+            <div id="opt-in-feedback" class="opt-in-feedback"></div>
+            <button id="submit-opt-in" class="submit-opt-in-button">Submit Preference</button>
+
         </div>
     </div>
 
@@ -549,8 +559,7 @@
                 }
                 timeLeft--;
             }, 1000); // Update every 1 second
-        }
-
+        }        
         // Function to handle time running out
         function handleTimeUp() {
             quizCompleted = true; // Mark quiz as completed (by time running out)
@@ -698,10 +707,12 @@
         // Function to show final results and the earned badge
         function showResults() {
             // Alert to check if showResults is called
+             // Alert to check if showResults is called
             alert('showResults called');
 
+
             quizCompleted = true;
-            clearInterval(timerInterval); // Stop the timer
+             clearInterval(timerInterval); // Stop the timer
             quizAreaElement.classList.add('hidden');
             scoreAreaElement.classList.remove('hidden');
             //optInArea.classList.remove('hidden'); // Show opt-in area
@@ -735,6 +746,10 @@
                  noBadgeText.className = 'no-badge';
                  badgeAreaElement.appendChild(noBadgeText);
             }
+              const submitOptInButton = document.getElementById('submit-opt-in');
+             submitOptInButton.addEventListener('click', sendOptInEmail);
+
+
         }
 
         // Function to display a badge on the quiz page
@@ -762,6 +777,9 @@
 
         // Function to send the opt-in email
         function sendOptInEmail() {
+             // Alert to check if sendOptInEmail is called
+            alert('sendOptInEmail called');
+
             // Add the submitting message
             optInFeedback.textContent = 'Submitting...';
             // Log the value of isOptedIn
@@ -826,10 +844,7 @@
                    console.error('Results and Opt-in email sending failed:', error);
                 });
         }
-
-        // Initial display of timer (optional, shows --:-- before start)
-        // You could also call startTimer() here if you want the timer to start immediately on page load
-        // but the user needs to enter details first, so it's better to start on button click.
+        
     </script>
 </body>
 </html>
