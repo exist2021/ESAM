@@ -759,6 +759,8 @@
 
         // Function to send the opt-in email
         function sendOptInEmail() {
+            // Add the submitting message
+            optInFeedback.textContent = 'Submitting...';
            // Get opt in information
             const isOptedIn = optInCheckbox.checked;
              // Log the value of participantEmail
@@ -787,8 +789,6 @@
             console.log(templateParams);
             // Log message before sending
             console.log('Sending email...');
-
-            optInFeedback.textContent = 'Submitting...';
 
             emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
