@@ -519,12 +519,10 @@
             participantPhone = phoneInput.value.trim();
 
             if (!participantEmail) {
-                alert("Please enter your email address."); // Using alert as a simple validation feedback
                 return;
             }
 
             // Hide info area and show quiz area
-            infoAreaElement.classList.add('hidden');
             quizAreaElement.classList.remove('hidden');
             reviewNav.classList.add('hidden'); // Hide review nav during quiz
             optInArea.classList.add('hidden'); // Hide opt-in area during quiz
@@ -706,39 +704,22 @@
 
         // Function to show final results and the earned badge
         function showResults() {
-            // Alert to check if showResults is called
-            alert('showResults called');
-
-
             quizCompleted = true;
              // Check the timer is cleared
              clearInterval(timerInterval); // Stop the timer
-             alert('clearInterval');
             quizAreaElement.classList.add('hidden');
-             // Check that quiz area is hidden
-             alert('quizAreaElement hidden');
             scoreAreaElement.classList.remove('hidden');
-            // Check the score area is shown
-            alert('scoreAreaElement shown');
              optInArea.classList.remove('hidden'); // Show opt-in area
-             // Check the opt-in area is shown
-             alert('optInArea shown');
-            
+            infoAreaElement.classList.add('hidden');
+
             
 
-            // Add the listener for the submit button
-             const submitOptInButton = document.getElementById('submit-opt-in');
              submitOptInButton.addEventListener('click', sendOptInEmail);
-             //Check if the event listener was added
-             alert('event listener added');
 
             totalQuestionsElement.textContent = quizData.length;
              // Check the total questions
-             alert('totalQuestionsElement');
-
             finalScoreElement.textContent = score;
              // Check the final score
-            alert('finalScoreElement');
 
             const percentage = (score / quizData.length) * 100;
 
@@ -764,9 +745,6 @@
                  noBadgeText.className = 'no-badge';
                  badgeAreaElement.appendChild(noBadgeText);
             }
-            // Check the badge area
-            alert('badgeAreaElement');
-
              
 
         }
@@ -797,28 +775,6 @@
         // Function to send the opt-in email
         function sendOptInEmail() {
              // Alert to check if sendOptInEmail is called
-             alert('sendOptInEmail called');
-            
-            alert('sendOptInEmail called');
-            // Add the submitting message
-            optInFeedback.textContent = 'Submitting...';
-            // Log the value of isOptedIn
-            alert('isOptedIn: ' + isOptedIn);
-            // Log the value of optInFeedback.textContent
-            alert('optInFeedback: ' + optInFeedback.textContent);
-
-
-            // Check if templateParams is defined
-            alert('templateParams defined');
-
-           // Get opt in information
-            const isOptedIn = optInCheckbox.checked;
-             // Log the value of participantEmail
-            console.log('participantEmail:', participantEmail);
-
-
-             // Log the value of participantPhone
-            console.log('participantPhone:', participantPhone);
             // Log the value of score
             console.log('score:', score);
             // Log the value of quizData.length
@@ -826,39 +782,29 @@
             // Log the value of earnedBadgeText
             console.log('earnedBadgeText:', earnedBadgeText);
 
+            // Add the submitting message
+            optInFeedback.textContent = 'Submitting...';
+
+            const isOptedIn = optInCheckbox.checked;
+
             const templateParams = {
                 participant_email: participantEmail, // Use stored email
                 participant_phone: participantPhone,  // Use stored phone
                 participant_score: score, // Include the final score
                 total_questions: quizData.length, // Include total questions
                 earned_badge: earnedBadgeText, // Include the earned badge text
-                opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status
+                opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status            
             };
 
             // Log the parameters that are being sent to EmailJS
             console.log(templateParams);
             // Log message before sending
             console.log('Sending email...');
-            // Log the value of templateParams.participant_email
-            alert('participantEmail: ' + templateParams.participant_email);
-            // Log the value of templateParams.participant_phone
-            alert('participantPhone: ' + templateParams.participant_phone);
-            // Log the value of templateParams.participant_score
-            alert('score: ' + templateParams.participant_score);
-             // Log the value of templateParams.total_questions
-            alert('total_questions: ' + templateParams.total_questions);
-
-            emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
-                     //Check that the emailjs send function was called
-                    alert('emailjs send function');
                     // Log email sent message
-                    console.log('Email sent!');
                      // Check that email sent successfully
-                    alert('Email sent!');
 
                     optInFeedback.textContent = 'Your preference and results have been submitted.';
-                    optInFeedback.style.color = '#065f46'; // Green color for success
 
                    submitOptInButton.disabled = true; // Disable button after sending
 
@@ -867,9 +813,8 @@
                     // Log email failed message
                     console.log('Email failed!');
                     optInFeedback.textContent = 'Failed submitting!';
-                    //Check if the email failed
-                    alert('Email failed!');
-                   optInFeedback.style.color = '#991b1b'; // Red color for error
+
+                   optInFeedback.style.color = '#991b1b';
                    console.error('Results and Opt-in email sending failed:', error);
                 });
         }
