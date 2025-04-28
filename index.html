@@ -499,7 +499,7 @@
         const optInCheckbox = document.getElementById('opt-in-checkbox');
         const submitOptInButton = document.getElementById('submit-opt-in');
         const optInFeedback = document.getElementById('opt-in-feedback');
-
+        
 
         // Event listeners
         startQuizButton.addEventListener('click', startQuiz);
@@ -709,6 +709,10 @@
             scoreAreaElement.classList.remove('hidden');
             optInArea.classList.remove('hidden'); // Show opt-in area
 
+            // Add event listener here, when the button is available
+            const submitOptInButton = document.getElementById('submit-opt-in');
+            submitOptInButton.addEventListener('click', sendOptInEmail);
+
             totalQuestionsElement.textContent = quizData.length;
             finalScoreElement.textContent = score;
             const percentage = (score / quizData.length) * 100;
@@ -764,23 +768,34 @@
         function sendOptInEmail() {
             const isOptedIn = optInCheckbox.checked;
 
-            // Send a simple test email
             const templateParams = {
-              to_email: participantEmail,
-              subject: "Test Email",
-             message: "This is a test email."
-            }
-            // Service ID: service_wueoxhm
-            // Template ID: template_nodw1zo
-            // Public Key: -TK5RyNUa7KbNMEM5
+                participant_email: participantEmail, // Use stored email
+                participant_phone: participantPhone,  // Use stored phone
+                participant_score: score, // Include the final score
+                total_questions: quizData.length, // Include total questions
+                earned_badge: earnedBadgeText, // Include the earned badge text
+                opt_in_status: isOptedIn ? "Yes" : "No" // Include opt-in status
+            };
+
+            // Log message before sending
+            console.log('Sending email...');
+
+            optInFeedback.textContent = 'Submitting...';
+
             emailjs.send("service_wueoxhm", "template_nodw1zo", templateParams)
                 .then(function(response) {
-                   optInFeedback.textContent = 'Your preference and results have been submitted.';
+                    // Log email sent message
+                    console.log('Email sent!');
+
+                    optInFeedback.textContent = 'Your preference and results have been submitted.';
                    optInFeedback.style.color = '#065f46'; // Green color for success
                    submitOptInButton.disabled = true; // Disable button after sending
-                   console.log('Results and Opt-in email successfully sent!', response.status, response.text);
+
+
                 }, function(error) {
-                   optInFeedback.textContent = 'Failed to submit your preference and results. Please try again later.';
+                    // Log email failed message
+                    console.log('Email failed!');
+                    optInFeedback.textContent = 'Failed submitting!';
                    optInFeedback.style.color = '#991b1b'; // Red color for error
                    console.error('Results and Opt-in email sending failed:', error);
                 });
