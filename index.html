@@ -684,11 +684,8 @@
                 labels[correctIndex].classList.add('correct-answer');
             }
 
-            // Auto-forward after 3 seconds
-            setTimeout(() => {
-                currentQuestionIndex++;
-                loadQuestion();
-            }, 3000); // 3000 milliseconds = 3 seconds
+            currentQuestionIndex++;
+            loadQuestion();
         }
 
         // Function to trigger confetti
